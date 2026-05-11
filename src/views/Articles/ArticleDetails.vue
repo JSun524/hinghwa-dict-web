@@ -1,5 +1,6 @@
 <template>
-  <a-spin v-if="hasDeleted === false" :delay="500" :spinning="spinning">
+  <a-spin v-if="hasDeleted===false" :delay="500" :spinning="spinning">
+
     <a-row :gutter="20" justify="center" type="flex">
       <!--文章主体部分-->
       <a-col span="17">
@@ -7,34 +8,27 @@
           <!--标题、封面、简介-->
           <a-card>
             <template #title>
-              <h1>{{ article.title }}</h1>
+              <h1> {{ article.title }} </h1>
             </template>
 
             <template #cover>
-              <img
-                :alt="
-                  '这里本是文章的封面，其地址为' +
-                  article.cover +
-                  ',但是显示不出来了'
-                "
-                :src="article.cover"
-              />
+              <img :alt="'这里本是文章的封面，其地址为'+article.cover+',但是显示不出来了'" :src="article.cover">
             </template>
 
-            <p>文章简介： {{ article.description }}</p>
+            <p> 文章简介： {{ article.description }} </p>
           </a-card>
 
           <!---文章主体部分--->
           <a-card>
-            <MarkdownViewer :text="article.content" />
+            <MarkdownViewer :text="article.content"/>
           </a-card>
           <!--评论区-->
           <a-card>
             <template #title>
-              <h3>评论区</h3>
+              <h3> 评论区 </h3>
             </template>
             <a-spin :delay="500" :spinning="commentsLoading">
-              <comment-list :id="id" :pageSize="8" :parent="0" />
+              <comment-list :id="id" :pageSize="8" :parent="0"/>
             </a-spin>
           </a-card>
         </SelectSearch>
@@ -49,43 +43,36 @@
           <a-card-meta :title="article.author.nickname">
             <router-link
               slot="avatar"
-              :to="{
-                name: 'UserDetails',
-                params: { id: article.author.id.toString() },
-              }"
+              :to="{name:'UserDetails',params:{id:article.author.id.toString()}}"
             >
-              <a-avatar :src="article.author.avatar" />
+              <a-avatar :src="article.author.avatar"/>
             </router-link>
           </a-card-meta>
-          <br />
+          <br>
+          <h3> 发布时间:<br>&nbsp;&nbsp;&nbsp;&nbsp;{{ article.publish_time }} </h3>
+          <h3> 最近更新:<br>&nbsp;&nbsp;&nbsp;&nbsp;{{ article.update_time }} </h3>
           <h3>
-            发布时间:<br />&nbsp;&nbsp;&nbsp;&nbsp;{{ article.publish_time }}
-          </h3>
-          <h3>
-            最近更新:<br />&nbsp;&nbsp;&nbsp;&nbsp;{{ article.update_time }}
-          </h3>
-          <h3>
-            <a-icon type="eye" />
+            <a-icon type="eye"/>
             阅读量：{{ article.views }}
           </h3>
           <h3>
-            <a-icon type="like" />
+            <a-icon type="like"/>
             点赞量：{{ article.likes }}
           </h3>
         </a-card>
 
         <a-card style="margin-top: 16px" title="文章操作">
-          <div style="text-align: center; line-height: 48px">
+          <div style="text-align: center;line-height: 48px">
             <a-button
               :loading="btnLikeLoading"
-              style="margin-top: 8px"
+              style="margin-top:8px"
               type="primary"
               @click="btnLikeClick"
             >
-              {{ me.liked ? "取消" : "" }}点赞
+              {{ me.liked ? '取消' : '' }}点赞
             </a-button>
 
-            <br />
+            <br>
 
             <a-popconfirm
               cancel-text="取消"
@@ -93,6 +80,7 @@
               title="文章一旦删除变无法找回，你确定要继续操作？"
               @confirm="deleteArticle"
             >
+
               <a-button
                 v-if="me.is_author"
                 :loading="btnDeleteLoading"
@@ -102,19 +90,25 @@
               </a-button>
             </a-popconfirm>
 
-            <br />
+            <br>
 
-            <router-link :to="{ name: 'ArticleEdit', params: { id: id } }">
+            <router-link :to="{name:'ArticleEdit',params:{id: id}}">
               <a-button v-if="me.is_author" type="primary"> 编辑</a-button>
             </router-link>
+
           </div>
         </a-card>
       </a-col>
     </a-row>
   </a-spin>
-  <a-result v-else class="body" status="success" title="成功删除文章！">
+  <a-result
+    v-else
+    class="body"
+    status="success"
+    title="成功删除文章！"
+  >
     <template #extra>
-      <router-link :to="{ name: 'Home' }">
+      <router-link :to="{name:'Home'}">
         <a-button>返回首页</a-button>
       </router-link>
     </template>
@@ -179,20 +173,16 @@ export default {
     }
   },
   created () {
-    axios
-      .get('/articles/' + this.id)
-      .then(async (res) => {
-        this.article = res.data.article
-        this.me = res.data.me
-        this.$store.commit('updateComments', this.id)
-      })
-      .catch(() => {
-        this.$message.destroy()
-        this.$router.replace({ name: 'NotFound' })
-      })
-      .finally(() => {
-        this.spinning = false
-      })
+    axios.get('/articles/' + this.id).then(async (res) => {
+      this.article = res.data.article
+      this.me = res.data.me
+      this.$store.commit('updateComments', this.id)
+    }).catch(() => {
+      this.$message.destroy()
+      this.$router.replace({ name: 'NotFound' })
+    }).finally(() => {
+      this.spinning = false
+    })
   },
   beforeRouteEnter (to, from, next) {
     if (to.params.id % 1 === 0) {
@@ -260,4 +250,6 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>
